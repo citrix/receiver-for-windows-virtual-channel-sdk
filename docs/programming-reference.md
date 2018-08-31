@@ -15,7 +15,10 @@ virtual driver, when the ICA connection is being terminated.
 
 ```
 INT Driverclose
-	( PVD pVD,	PDLLCLOSE pVdClose, 	PUINT16 puiSize);```
+	( PVD pVD,
+	PDLLCLOSE pVdClose, 
+	PUINT16 puiSize);
+```
 
 ### Parameters
 
@@ -193,7 +196,12 @@ WinStation driver fills in the OpenVirtualChannel structure (including
 the channel number) and the data in pVd.
 
 ```
-WDQUERYINFORMATION wdqi;OPENVIRTUALCHANNEL OpenVirtualChannel;wdqi.WdInformationClass = WdOpenVirtualChannel; wdqi.pWdInformation = &OpenVirtualChannel;wdqi.WdInformationLength = sizeof(OPENVIRTUALCHANNEL); OpenVirtualChannel.pVCName = CTXPING_VIRTUAL_CHANNEL_NAME; rc = VdCallWd(pVd, WDxQUERYINFORMATION, &wdqi);/* do error processing here */```
+WDQUERYINFORMATION wdqi;
+OPENVIRTUALCHANNEL OpenVirtualChannel;
+wdqi.WdInformationClass = WdOpenVirtualChannel; wdqi.pWdInformation = &OpenVirtualChannel;
+wdqi.WdInformationLength = sizeof(OPENVIRTUALCHANNEL); OpenVirtualChannel.pVCName = CTXPING_VIRTUAL_CHANNEL_NAME; rc = VdCallWd(pVd, WDxQUERYINFORMATION, &wdqi);
+/* do error processing here */
+```
 After the call to VdCallWd, the channel number is assigned in the
 OpenVirtualChannel structure's Channel element. Save the channel
 number and set the channel mask to indicate which channel this driver
@@ -225,13 +233,21 @@ to the server.
 
 ```
 WDSETINFORMATION wdsi; 
-VDWRITEHOOK vdwh;// Fill in a write hook structure 
-vdwh.Type = g_usVirtualChannelNum; vdwh.pVdData = pVd;vdwh.pProc = (PVDWRITEPROCEDURE) ICADataArrival;
-// Fill in a set information structure 
+VDWRITEHOOK vdwh;
+
+// Fill in a write hook structure 
+
+vdwh.Type = g_usVirtualChannelNum; 
+vdwh.pVdData = pVd;
+vdwh.pProc = (PVDWRITEPROCEDURE) ICADataArrival;
+
+// Fill in a set information structure 
 wdsi.WdInformationClass = WdVirtualWriteHook; 
 wdsi.pWdInformation = &vdwh; 
 wdsi.WdInformationLength = sizeof(VDWRITEHOOK); 
-rc = VdCallWd( pVd, WDxSETINFORMATION, &wdsi);/* do error processing here */```
+rc = VdCallWd( pVd, WDxSETINFORMATION, &wdsi);
+/* do error processing here */
+```
 
 
 During the registration of the write hook, the WinStation driver passes
@@ -244,11 +260,14 @@ WinStation driver data area, which the DriverOpen function also saves
 functions).
 
 ```
-// Record pointers to functions used// for sending data to the host. 
-pWd = vdwh.pWdData;pOutBufReserve = vdwh.pOutBufReserveProc; 
+// Record pointers to functions used
+// for sending data to the host. 
+pWd = vdwh.pWdData;
+pOutBufReserve = vdwh.pOutBufReserveProc; 
 pOutBufAppend = vdwh.pOutBufAppenProc; 
 pOutBufWrite = vdwh.pOutBufWriteProc; 
-pAppendVdHeader = vdwh.pAppendVdHeaderProc;```
+pAppendVdHeader = vdwh.pAppendVdHeaderProc;
+```
 &#52;. Determine the version of the WinStation driver.
 
 New virtual drivers should determine whether the WinStation driver
@@ -583,7 +602,7 @@ function is passed to the WinStation driver during DriverOpen.
 
 ### Calling Convention
 ```
-VOID wfcapi ICADataArrival(
+INT wfcapi ICADataArrival(
 	PVD pVD,
 	USHORT uchan,
 	LPBYTE pBuf,
@@ -602,7 +621,7 @@ VOID wfcapi ICADataArrival(
 
 ### Return Value
 
-No value is returned from this function.
+The driver returns CLIENT\_STATUS\_SUCCESS.
 
 ### Remarks
 
@@ -1060,7 +1079,12 @@ Reads data from a virtual channel.
 ### Calling Convention
 
 ```
-BOOL WINAPI WFVirtualChannelRead(IN HANDLE hChannelHandle,								  IN ULONG TimeOut, 								  OUT PCHAR pBuffer, 								  IN ULONG BufferSize,								  OUT PULONG pBytesRead								  );
+BOOL WINAPI WFVirtualChannelRead(IN HANDLE hChannelHandle,
+								  IN ULONG TimeOut, 
+								  OUT PCHAR pBuffer, 
+								  IN ULONG BufferSize,
+								  OUT PULONG pBytesRead
+								  );
 ```
 ### Parameters
 
@@ -1105,8 +1129,13 @@ Writes data to a virtual channel.
 ### Calling Convention
 
 ```
-BOOL WINAPI WFVirtualChannelWrite	(IN HANDLE hChannelHandle,									 IN PCHAR pBuffer, 									 IN ULONG Length,									 OUT PULONG pBytesWritten									 );
-```
+BOOL WINAPI WFVirtualChannelWrite	(IN HANDLE hChannelHandle,
+									 IN PCHAR pBuffer, 
+									 IN ULONG Length,
+									 OUT PULONG pBytesWritten
+									 );
+
+```
 
 ### Parameters
 
