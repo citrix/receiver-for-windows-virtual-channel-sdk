@@ -602,7 +602,7 @@ function is passed to the WinStation driver during DriverOpen.
 
 ### Calling Convention
 ```
-INT wfcapi ICADataArrival(
+VOID wfcapi ICADataArrival(
 	PVD pVD,
 	USHORT uchan,
 	LPBYTE pBuf,
@@ -621,7 +621,7 @@ INT wfcapi ICADataArrival(
 
 ### Return Value
 
-The driver returns CLIENT\_STATUS\_SUCCESS.
+No value is returned from this function.
 
 ### Remarks
 
